@@ -1,51 +1,73 @@
 module EntityMaker
     class Project
-        attr_accessor :name, :copyright, :prefix
-    end
-    
-    class Entity
-        attr_accessor :name, :superclass, :protocols, :readonly
+        attr_reader :codename, :copyright_notice, :prefix
         
-        def initialize(name)
-            @name = name
-            @properties = {}
-            @superclass = 'NSObject'
-            @protocols = []
+        def name(name)
+            @codename = name
         end
         
-        def property(name, type)
-            @properties[name] = Property.new(name, type)
+        def class_prefix(prefix)
+            @prefix = prefix
+        end
+        
+        def copyright(copyright)
+            @copyright_notice = copyright
+        end
+    end
+    
+    class EntityBuilder
+        attr_reader :entity
+        
+        def initialize(entity_name)
+            @entity = Entity.new(entity_name)
         end
         
         def inherits(superclass)
-            @superclass = superclass
+            @entity.superclass = superclass
         end
         
         def conforms_to(protocol)
-            @protocols << protocol
+            @entity.protocols << protocol
         end
-        
-        alias :p :property
         
         # There was a way to do that better... "define_all" or something
         def string(propname)
-            @properties[propname] = StringProperty.new(propname)
+            add_property(StringProperty.new(propname))
         end
         
         def int(propname)
-            @properties[propname] = IntegerProperty.new(propname)
+            add_property(IntegerProperty.new(propname))
         end
         
         def set(propname)
-            @properties[propname] = SetProperty.new(propname)
+            add_property(SetProperty.new(propname))
         end
         
         def url(propname)
-            @properties[propname] = UrlProperty.new(propname)
+            add_property(UrlProperty.new(propname))
         end
         
         def array(propname)
-            @properties[propname] = ArrayProperty.new(propname)
+            add_property(ArrayProperty.new(propname))
+        end
+        
+        def add_property(property)
+            @entity.add_property(property)
+        end
+    end
+    
+    class Entity
+        attr_accessor :name, :superclass, :protocols
+        
+        def initialize(name)
+            @name = name
+            @superclass = 'NSObject'
+            @properties = {}
+            @protocols = []
+        end
+        
+        def add_property(property)
+            @properties[property.name] = property
         end
         
         def properties
@@ -158,9 +180,9 @@ module EntityMaker
         @project = Project.new()
         
         def self.new_entity(name, &configuration)
-            entity = Entity.new(name)
-            entity.instance_eval &configuration
-            @entities << entity
+            builder = EntityBuilder.new(name)
+            builder.instance_eval &configuration
+            @entities << builder.entity
         end
         
         def self.current_entity
@@ -177,25 +199,26 @@ module EntityMaker
     end
 end
 
-def object(name, &configuration)
-    EntityMaker::Maestro.new_entity(name, &configuration)
-end
-
 def project(&configuration)
     EntityMaker::Maestro.project.instance_exec &configuration
+end
+
+def object(name, &configuration)
+    EntityMaker::Maestro.new_entity(name, &configuration)
 end
 
 # Here come the definitions
 
 project {
-    @name = 'HowTo'
-    @prefix = 'HT'
-    @copyright = '2012 Antoine d\'Otreppe'
+    name 'HowTo'
+    class_prefix 'HT'
+    copyright '2012 Antoine d\'Otreppe'
 }
 
 object "HowToItem" do
     inherits 'UITableView'
     conforms_to 'UITableViewDelegate'
+    conforms_to 'UITableViewDataSource'
     
     int     :id
     string  :title
