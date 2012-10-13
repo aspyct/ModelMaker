@@ -1,0 +1,23 @@
+//
+//  HTHowToItem.h
+//  HowTo
+//
+//  Created by Antoine d'Otreppe on 18/09/12.
+//  Copyright (c) 2012 Antoine d'Otreppe. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface <%= @prefix %><%= @entity.name %> : NSObject {
+@package
+<% for @property in @entity.properties %>
+    <%= @property.internal_type %><%= @property.internal_name %>;
+<% end %>
+}
+
+<% for @property in @entity.properties %>
+@property (readonly) <%= @property.exposed_type %><%= @property.exposed_name %>
+
+<% end %>
+
+@end
