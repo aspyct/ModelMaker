@@ -212,7 +212,10 @@ module ModelMaker
             source = File.new(@pathname).read()
             
             executer = FileExecuter.new()
-            executer.instance_eval(source, @pathname, 0)
+            
+            ModelRepo.prepare()
+            executer.instance_eval(source, @pathname, 1)
+            ModelRepo.finalize()
             
 
             for file in ['header.erb', 'implementation.erb'] do
@@ -224,6 +227,7 @@ module ModelMaker
                     vars = SourceGen::TemplateVars.new
                     vars.project = ModelMaker::ModelRepo.project
                     vars.entity = entity
+                    
                     puts renderer.result(vars.get_binding)
                 end
             end
@@ -241,9 +245,6 @@ module ModelMaker
     end
     
     class ModelRepo
-        @entities = []
-        @project_builder = ProjectBuilder.new()
-        
         def self.new_entity(name, &configuration)
             builder = EntityBuilder.new(name)
             builder.instance_eval &configuration
@@ -264,6 +265,14 @@ module ModelMaker
         
         def self.configure_project(&configuration)
             @project_builder.instance_eval(&configuration)
+        end
+        
+        def self.prepare
+            @entities = []
+            @project_builder = ProjectBuilder.new()
+        end
+        
+        def self.finalize
         end
     end
 end
