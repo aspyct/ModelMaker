@@ -1,19 +1,29 @@
 #!/usr/bin/env ruby
 
+require 'erb'
+
 module ModelMaker
     class Project
-        attr_reader :codename, :copyright_notice, :prefix
+        attr_accessor :name, :copyright, :class_prefix
+    end
+    
+    class ProjectBuilder
+        attr_reader :project
+        
+        def initialize
+            @project = Project.new()
+        end
         
         def name(name)
-            @codename = name
+            @project.name = name
         end
         
         def class_prefix(prefix)
-            @prefix = prefix
+            @project.class_prefix = prefix
         end
         
         def copyright(copyright)
-            @copyright_notice = copyright
+            @project.copyright = copyright
         end
     end
     
@@ -179,19 +189,11 @@ module ModelMaker
     
     class FileExecuter
         def project(&configuration)
-            ModelMaker::ModelRepo.project.instance_exec &configuration
+            ModelMaker::ModelRepo.configure_project(&configuration)
         end
 
         def object(name, &configuration)
             ModelMaker::ModelRepo.new_entity(name, &configuration)
-        end
-    end
-
-    class TemplateVars
-        attr_accessor :entity, :project
-        
-        def get_binding
-            binding
         end
     end
     
@@ -212,7 +214,6 @@ module ModelMaker
             executer = FileExecuter.new()
             executer.instance_eval(source, @pathname, 0)
             
-            require 'erb'
 
             for file in ['header.erb', 'implementation.erb'] do
                 entities = ModelMaker::ModelRepo.entities
@@ -220,7 +221,7 @@ module ModelMaker
                 renderer = ERB.new(template, 0, '>')
 
                 for entity in entities do
-                    vars = TemplateVars.new
+                    vars = SourceGen::TemplateVars.new
                     vars.project = ModelMaker::ModelRepo.project
                     vars.entity = entity
                     puts renderer.result(vars.get_binding)
@@ -228,10 +229,20 @@ module ModelMaker
             end
         end
     end
+
+    module SourceGen
+        class TemplateVars
+            attr_accessor :entity, :project, :file
+            
+            def get_binding
+                binding
+            end
+        end
+    end
     
     class ModelRepo
         @entities = []
-        @project = Project.new()
+        @project_builder = ProjectBuilder.new()
         
         def self.new_entity(name, &configuration)
             builder = EntityBuilder.new(name)
@@ -248,7 +259,11 @@ module ModelMaker
         end
         
         def self.project
-            @project
+            @project_builder.project
+        end
+        
+        def self.configure_project(&configuration)
+            @project_builder.instance_eval(&configuration)
         end
     end
 end
