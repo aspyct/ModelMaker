@@ -1,5 +1,5 @@
 //
-// <%= @project.class_prefix %><%= @entity.name %>.m
+// <%= @entity.name %>.m
 // <%= @project.name %>
 
 //
@@ -11,9 +11,9 @@
 // EntityMaker, http://github.com/aspyct/EntityMaker
 //
 
-#import "<%= @project.class_prefix %><%= @entity.name %>.h"
+#import "<%= @entity.name %>.h"
 
-@implementation <%= @project.class_prefix %><%= @entity.name %>
+@implementation <%= @entity.name %>
 
 <% for @property in @entity.properties %>
 @synthesize <%= @property.exposed_name %> = <%= @property.internal_name %>;

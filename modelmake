@@ -69,13 +69,23 @@ module ModelMaker
     end
     
     class Entity
-        attr_accessor :name, :superclass, :protocols
+        attr_reader :name
+        attr_accessor :superclass, :protocols, :project
         
         def initialize(name)
             @name = name
+            
             @superclass = 'NSObject'
             @properties = {}
             @protocols = []
+        end
+        
+        def name
+            if @project
+                "#{@project.class_prefix}#{@name}"
+            else
+                @name
+            end
         end
         
         def add_property(property)
@@ -211,9 +221,8 @@ module ModelMaker
             
             source = File.new(@pathname).read()
             
-            executer = FileExecuter.new()
-            
             ModelRepo.prepare()
+            executer = FileExecuter.new()
             executer.instance_eval(source, @pathname, 1)
             ModelRepo.finalize()
             
@@ -224,7 +233,7 @@ module ModelMaker
                 renderer = ERB.new(template, 0, '>')
 
                 for entity in entities do
-                    vars = SourceGen::TemplateVars.new
+                    vars = Source::TemplateVars.new
                     vars.project = ModelMaker::ModelRepo.project
                     vars.entity = entity
                     
@@ -234,12 +243,30 @@ module ModelMaker
         end
     end
 
-    module SourceGen
+    module Source
+        class Generator
+            def initialize(project)
+                @project = project
+            end
+            
+            def generate(target_directory)
+                
+            end
+        end
+        
         class TemplateVars
             attr_accessor :entity, :project, :file
             
             def get_binding
                 binding
+            end
+        end
+        
+        class FileInfo
+            attr_accessor :entity, :extension
+            
+            def name
+                return "#{@entity.name}.#{@extension}"
             end
         end
     end
@@ -273,6 +300,9 @@ module ModelMaker
         end
         
         def self.finalize
+            for entity in @entities do
+                entity.project = @project_builder.project
+            end
         end
     end
 end

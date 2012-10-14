@@ -1,5 +1,5 @@
 //
-// <%= @project.class_prefix %><%= @entity.name %>.h
+// <%= @entity.name %>.h
 // <%= @project.name %>
 
 //
@@ -13,7 +13,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface <%= @project.class_prefix %><%= @entity.name %> : <%= @entity.superclass %> <%= '<' + @entity.protocols.join(', ') + '> ' if not @entity.protocols.empty? %>{
+@interface <%= @entity.name %> : <%= @entity.superclass %> <%= '<' + @entity.protocols.join(', ') + '> ' if not @entity.protocols.empty? %>{
 @package
 <% for @property in @entity.properties %>
     <%= @property.internal_type %><%= @property.internal_name %>;
