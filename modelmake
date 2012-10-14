@@ -228,30 +228,36 @@ module ModelMaker
             builder = ProjectBuilder.new(project)
             builder.instance_eval(source, @pathname, 1)
 
-            for file in ['header.erb', 'implementation.erb'] do
-                entities = project.entities
-                template = File.new(file).read
-                renderer = ERB.new(template, 0, '>')
-
-                for entity in entities do
-                    vars = Source::TemplateVars.new
-                    vars.project = project
-                    vars.entity = entity
-                    
-                    puts renderer.result(vars.get_binding)
-                end
-            end
+            generator = Source::Generator.new(project)
+            generator.generate()
         end
     end
 
     module Source
         class Generator
-            def initialize(project, entities)
+            def initialize(project)
                 @project = project
             end
             
-            def generate(target_directory)
-                
+            def generate(target_directory='.')
+                for cls in renderers do
+                    renderer = cls.new()
+                    
+                    for entity in @project.entities
+                        vars = TemplateVars.new()
+                        vars.project = @project
+                        vars.entity = entity
+                        
+                        puts renderer.result(vars)
+                    end
+                end
+            end
+            
+            def renderers
+                [
+                    HeaderRenderer,
+                    ImplementationRenderer
+                ]
             end
         end
         
@@ -263,12 +269,39 @@ module ModelMaker
             end
         end
         
-        class FileInfo
-            attr_accessor :entity, :extension
-            
-            def name
-                return "#{@entity.name}.#{@extension}"
+        class BaseRenderer
+            def template_file
+                raise 'Implement me'
             end
+            
+            def result(template_vars)
+                renderer.result(template_vars.get_binding)
+            end
+            
+            def renderer
+                if not @renderer
+                    template = File.new(template_file).read()
+                    @renderer = ERB.new(template, 0, '>')
+                end
+                
+                @renderer
+            end
+        end
+        
+        class HeaderRenderer < BaseRenderer
+            def template_file
+                'header.erb'
+            end
+        end
+        
+        class ImplementationRenderer < BaseRenderer
+            def template_file
+                'implementation.erb'
+            end
+        end
+        
+        class FileInfo
+            attr_accessor :pathname
         end
     end
 end
