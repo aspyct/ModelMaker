@@ -1,0 +1,20 @@
+project {
+    name 'HowTo'
+    class_prefix 'HT'
+    copyright '2012 Antoine d\'Otreppe'
+}
+
+object "HowToItem" do
+    inherits 'UITableView'
+    conforms_to 'UITableViewDelegate'
+    conforms_to 'UITableViewDataSource'
+    
+    int     :id
+    string  :title
+    string  :author
+    url     :image
+    string  :description
+    int     :score
+    set     :tags
+    array   :comments
+end

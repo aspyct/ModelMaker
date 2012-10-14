@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 module ModelMaker
     class Project
         attr_reader :codename, :copyright_notice, :prefix
@@ -176,10 +178,58 @@ module ModelMaker
     end
     
     class FileExecuter
-        pathname = 'Model' # Look for a file 'Model' in this directory
+        def project(&configuration)
+            ModelMaker::ModelRepo.project.instance_exec &configuration
+        end
+
+        def object(name, &configuration)
+            ModelMaker::ModelRepo.new_entity(name, &configuration)
+        end
+    end
+
+    class TemplateVars
+        attr_accessor :entity, :project
+        
+        def get_binding
+            binding
+        end
     end
     
-    class Maestro
+    class DefaultRunner
+        attr_accessor :pathname
+        
+        def initialize
+            @pathname = 'Model' # Look for a file 'Model' in this directory
+        end
+        
+        def run
+            if not File.exists?(@pathname)
+                raise 'No "Model" file found in the current directory'
+            end
+            
+            source = File.new(@pathname).read()
+            
+            executer = FileExecuter.new()
+            executer.instance_eval(source, @pathname, 0)
+            
+            require 'erb'
+
+            for file in ['header.erb', 'implementation.erb'] do
+                entities = ModelMaker::ModelRepo.entities
+                template = File.new(file).read
+                renderer = ERB.new(template, 0, '>')
+
+                for entity in entities do
+                    vars = TemplateVars.new
+                    vars.project = ModelMaker::ModelRepo.project
+                    vars.entity = entity
+                    puts renderer.result(vars.get_binding)
+                end
+            end
+        end
+    end
+    
+    class ModelRepo
         @entities = []
         @project = Project.new()
         
@@ -203,59 +253,4 @@ module ModelMaker
     end
 end
 
-def project(&configuration)
-    ModelMaker::Maestro.project.instance_exec &configuration
-end
-
-def object(name, &configuration)
-    ModelMaker::Maestro.new_entity(name, &configuration)
-end
-
-# Here come the definitions
-
-project {
-    name 'HowTo'
-    class_prefix 'HT'
-    copyright '2012 Antoine d\'Otreppe'
-}
-
-object "HowToItem" do
-    inherits 'UITableView'
-    conforms_to 'UITableViewDelegate'
-    conforms_to 'UITableViewDataSource'
-    
-    int     :id
-    string  :title
-    string  :author
-    url     :image
-    string  :description
-    int     :score
-    set     :tags
-    array   :comments
-end
-
-
-# end of definitions
-
-require 'erb'
-
-class TemplateVars
-    attr_accessor :entity, :project
-    
-    def get_binding
-        binding
-    end
-end
-
-for file in ['header.erb', 'implementation.erb'] do
-    entities = ModelMaker::Maestro.entities
-    template = File.new(file).read
-    renderer = ERB.new(template, 0, '>')
-
-    for entity in entities do
-        vars = TemplateVars.new
-        vars.project = ModelMaker::Maestro.project
-        vars.entity = entity
-        puts renderer.result(vars.get_binding)
-    end
-end
+ModelMaker::DefaultRunner.new().run()
