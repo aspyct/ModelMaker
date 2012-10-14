@@ -17,16 +17,12 @@ module ModelMaker
     end
     
     class ProjectBuilder
-        def initialize
-            @project = Project.new()
+        def initialize(project)
+            @project = project
         end
         
         def project(name)
             @project.name = name
-        end
-        
-        def get_project
-            @project
         end
         
         def class_prefix(prefix)
@@ -226,11 +222,11 @@ module ModelMaker
                 raise 'No "Model" file found in the current directory'
             end
             
+            project = Project.new()
             source = File.new(@pathname).read()
             
-            builder = ProjectBuilder.new()
+            builder = ProjectBuilder.new(project)
             builder.instance_eval(source, @pathname, 1)
-            project = builder.get_project()
 
             for file in ['header.erb', 'implementation.erb'] do
                 entities = project.entities
