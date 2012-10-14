@@ -1,8 +1,6 @@
-project {
-    name 'HowTo'
-    class_prefix 'HT'
-    copyright '2012 Antoine d\'Otreppe'
-}
+project 'HowTo'
+class_prefix 'HT'
+copyright '2012 Antoine d\'Otreppe'
 
 object "HowToItem" do
     inherits 'UITableView'

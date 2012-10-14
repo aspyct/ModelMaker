@@ -4,18 +4,29 @@ require 'erb'
 
 module ModelMaker
     class Project
-        attr_accessor :name, :copyright, :class_prefix
+        attr_accessor :name, :copyright, :class_prefix, :entities
+        
+        def initialize
+            @entities = []
+        end
+        
+        def add_entity(entity)
+            entity.project = self
+            @entities << entity
+        end
     end
     
     class ProjectBuilder
-        attr_reader :project
-        
         def initialize
             @project = Project.new()
         end
         
-        def name(name)
+        def project(name)
             @project.name = name
+        end
+        
+        def get_project
+            @project
         end
         
         def class_prefix(prefix)
@@ -25,13 +36,19 @@ module ModelMaker
         def copyright(copyright)
             @project.copyright = copyright
         end
+        
+        def object(name, &configuration)
+            builder = EntityBuilder.new(name, &configuration)
+            @project.add_entity(builder.entity)
+        end
     end
     
     class EntityBuilder
         attr_reader :entity
         
-        def initialize(entity_name)
+        def initialize(entity_name, &configuration)
             @entity = Entity.new(entity_name)
+            instance_eval(&configuration)
         end
         
         def inherits(superclass)
@@ -197,16 +214,6 @@ module ModelMaker
         end
     end
     
-    class FileExecuter
-        def project(&configuration)
-            ModelMaker::ModelRepo.configure_project(&configuration)
-        end
-
-        def object(name, &configuration)
-            ModelMaker::ModelRepo.new_entity(name, &configuration)
-        end
-    end
-    
     class DefaultRunner
         attr_accessor :pathname
         
@@ -221,20 +228,18 @@ module ModelMaker
             
             source = File.new(@pathname).read()
             
-            ModelRepo.prepare()
-            executer = FileExecuter.new()
-            executer.instance_eval(source, @pathname, 1)
-            ModelRepo.finalize()
-            
+            builder = ProjectBuilder.new()
+            builder.instance_eval(source, @pathname, 1)
+            project = builder.get_project()
 
             for file in ['header.erb', 'implementation.erb'] do
-                entities = ModelMaker::ModelRepo.entities
+                entities = project.entities
                 template = File.new(file).read
                 renderer = ERB.new(template, 0, '>')
 
                 for entity in entities do
                     vars = Source::TemplateVars.new
-                    vars.project = ModelMaker::ModelRepo.project
+                    vars.project = project
                     vars.entity = entity
                     
                     puts renderer.result(vars.get_binding)
@@ -245,7 +250,7 @@ module ModelMaker
 
     module Source
         class Generator
-            def initialize(project)
+            def initialize(project, entities)
                 @project = project
             end
             
@@ -267,41 +272,6 @@ module ModelMaker
             
             def name
                 return "#{@entity.name}.#{@extension}"
-            end
-        end
-    end
-    
-    class ModelRepo
-        def self.new_entity(name, &configuration)
-            builder = EntityBuilder.new(name)
-            builder.instance_eval &configuration
-            @entities << builder.entity
-        end
-        
-        def self.current_entity
-            @entities.last
-        end
-        
-        def self.entities
-            @entities
-        end
-        
-        def self.project
-            @project_builder.project
-        end
-        
-        def self.configure_project(&configuration)
-            @project_builder.instance_eval(&configuration)
-        end
-        
-        def self.prepare
-            @entities = []
-            @project_builder = ProjectBuilder.new()
-        end
-        
-        def self.finalize
-            for entity in @entities do
-                entity.project = @project_builder.project
             end
         end
     end
