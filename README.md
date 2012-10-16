@@ -17,7 +17,7 @@ Usage example
 Simply create a file named `Model` where you want you model classes to live.
 
 ```ruby
-project_name 'MyProject'
+project 'MyProject'
 class_prefix 'MP'
 copyright '2012 MyCompany'
 
@@ -45,7 +45,9 @@ Now open a command line in the directory where you put this `Model` file, and ru
 $ modelmake
 ```
 
-A few classes will be generated in the current directory. Among them, `MPBlogPost.h` (in our case). You'll quickly notice that the properties are read-only. This is intended behavior. Use the builder to create and modify such objects.
+A few classes will be generated in the current directory. Among them, `MPBlogPost.h` (in our case). See the [demo directory](https://github.com/aspyct/ModelMaker/tree/master/demo) for a preview.
+
+You'll quickly notice that the properties are read-only. This is intended behavior. Use the builder to create and modify such objects.
 
 **Add custom behavior**
 Remember that the files are overwritten each time you do a generate. If you want to add custom methods to these classes, you will probably want to add this in separate categories.
