@@ -56,6 +56,7 @@ A few classes will be generated in the current directory. Among them, `MPBlogPos
 You'll quickly notice that the properties are read-only. This is intended behavior. Use the builder to create and modify such objects.
 
 **Add custom behavior**
+
 Remember that the files are overwritten each time you do a generate. If you want to add custom methods to these classes, you will probably want to add this in separate categories.
 
 May I use this for commercial projects ?
