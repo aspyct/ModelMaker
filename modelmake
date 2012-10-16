@@ -248,7 +248,10 @@ module ModelMaker
                         vars.project = @project
                         vars.entity = entity
                         
-                        puts renderer.result(vars)
+                        filename = renderer.generated_file(vars)
+                        fullpath = File.join(target_directory, filename)
+                        fhandle = File.new(fullpath, 'w')
+                        fhandle.write(renderer.result(vars))
                     end
                 end
             end
@@ -274,13 +277,19 @@ module ModelMaker
                 raise 'Implement me'
             end
             
+            def generated_file(template_vars)
+                raise 'Implement me'
+            end
+            
             def result(template_vars)
                 renderer.result(template_vars.get_binding)
             end
             
             def renderer
                 if not @renderer
-                    template = File.new(template_file).read()
+                    mydir = File.dirname(__FILE__)
+                    template_path = File.join(mydir, template_file)
+                    template = File.new(template_path).read()
                     @renderer = ERB.new(template, 0, '>')
                 end
                 
@@ -292,11 +301,29 @@ module ModelMaker
             def template_file
                 'header.erb'
             end
+            
+            def generated_file(template_vars)
+                "#{template_vars.entity.name}.h"
+            end
         end
         
         class ImplementationRenderer < BaseRenderer
             def template_file
                 'implementation.erb'
+            end
+            
+            def generated_file(template_vars)
+                "#{template_vars.entity.name}.m"
+            end
+        end
+        
+        class BuilderHeaderRenderer < BaseRenderer
+            def template_file
+                'builder_header.erb'
+            end
+            
+            def generated_file(template_vars)
+                "#{template_vars.entity.name}Builer.h"
             end
         end
         
