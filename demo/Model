@@ -12,7 +12,7 @@ object 'BlogPost' do
     string  :body
     date    :publicationDate
     set     :tags
-    array   :comments
+    array   :comments, 'Comment'
     url     :online
     id      :author, 'Author'
 end

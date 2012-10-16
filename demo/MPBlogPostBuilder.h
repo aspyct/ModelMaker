@@ -24,7 +24,6 @@
 - (void)setTags:(NSSet *)tags;
 - (void)setComments:(NSArray *)comments;
 - (void)setOnline:(NSURL *)online;
-- (void)setAuthor:(MPAuthor)author;
-- (void)setTest:(NSObject *)test;
+- (void)setAuthor:(MPAuthor *)author;
 
 @end

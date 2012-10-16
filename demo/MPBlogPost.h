@@ -19,8 +19,7 @@
     NSMutableSet * _tags;
     NSMutableArray * _comments;
     NSURL * _online;
-    MPAuthor _author;
-    NSObject * _test;
+    MPAuthor * _author;
 }
 
 @property (readonly) NSInteger blogPostId;
@@ -28,9 +27,12 @@
 @property (readonly) NSString * body;
 @property (readonly) NSDate * publicationDate;
 @property (readonly) NSSet * tags;
+
+/**
+ * Array of MPComment *
+ */
 @property (readonly) NSArray * comments;
 @property (readonly) NSURL * online;
-@property (readonly) MPAuthor author;
-@property (readonly) NSObject * test;
+@property (readonly) MPAuthor * author;
 
 @end

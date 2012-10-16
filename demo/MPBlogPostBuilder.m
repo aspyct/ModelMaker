@@ -52,12 +52,8 @@
     _blogPost->_online = online;
 }
 
-- (void)setAuthor:(MPAuthor)author {
+- (void)setAuthor:(MPAuthor *)author {
     _blogPost->_author = author;
-}
-
-- (void)setTest:(NSObject *)test {
-    _blogPost->_test = test;
 }
 
 @end
