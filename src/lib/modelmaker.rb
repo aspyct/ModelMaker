@@ -193,6 +193,19 @@ module ModelMaker
         def assignation_value
             exposed_name
         end
+        
+        def comment_line
+            nil
+        end
+        
+        def make_classname(type)
+            # If we're linked to a project and class has no prefix
+            if project and not type =~ /^[A-Z]{3}/
+                "#{project.class_prefix}#{type} *"
+            else
+                "#{type} *"
+            end
+        end
     end
     
     class StringProperty < Property
@@ -267,6 +280,14 @@ module ModelMaker
         def assignation_value
             "[[NSMutableArray alloc] initWithArray:#{exposed_name}]"
         end
+        
+        def comment_line
+            if @type
+                "Array of #{make_classname(@type)}"
+            else
+                nil
+            end
+        end
     end
     
     class IdProperty < Property
@@ -277,12 +298,7 @@ module ModelMaker
         end
         
         def type
-            # If we're linked to a project and class has no prefix
-            if project and not @cls =~ /^[A-Z]{3}/
-                "#{project.class_prefix}#{@cls}"
-            else
-                "#{@cls} *"
-            end
+            make_classname(@cls)
         end
     end
     
