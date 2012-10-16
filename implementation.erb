@@ -26,7 +26,7 @@
     
     if (self) {
 <% for @property in @entity.properties %><% if @property.needs_init? %>
-        <%= @property.init_line %>
+        <%= @property.init_line %>;
         
 <% end %><% end %>
     }

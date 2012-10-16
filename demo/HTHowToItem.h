@@ -12,23 +12,31 @@
 
 @interface HTHowToItem : UITableView <UITableViewDelegate, UITableViewDataSource> {
 @package
-    NSInteger_id;
-    NSString *_title;
-    NSString *_author;
-    NSURL *_image;
-    NSString *_description;
-    NSInteger_score;
-    NSMutableSet *_tags;
-    NSMutableArray *_comments;
+    NSInteger _id;
+    NSString * _title;
+    NSString * _author;
+    NSURL * _image;
+    NSString * _description;
+    NSInteger _score;
+    NSMutableSet * _tags;
+    NSMutableArray * _comments;
 }
 
-@property (readonly) NSIntegerid
-@property (readonly) NSString *title
-@property (readonly) NSString *author
-@property (readonly) NSURL *image
-@property (readonly) NSString *description
-@property (readonly) NSIntegerscore
-@property (readonly) NSSet *tags
-@property (readonly) NSArray *comments
+@property (readonly) NSInteger id;
+
+@property (readonly) NSString * title;
+
+@property (readonly) NSString * author;
+
+@property (readonly) NSURL * image;
+
+@property (readonly) NSString * description;
+
+@property (readonly) NSInteger score;
+
+@property (readonly) NSSet * tags;
+
+@property (readonly) NSArray * comments;
+
 
 @end

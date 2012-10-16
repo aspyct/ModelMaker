@@ -16,12 +16,12 @@
 @interface <%= @entity.name %> : <%= @entity.superclass %> <%= '<' + @entity.protocols.join(', ') + '> ' if not @entity.protocols.empty? %>{
 @package
 <% for @property in @entity.properties %>
-    <%= @property.internal_type %><%= @property.internal_name %>;
+    <%= @property.internal_type %> <%= @property.internal_name %>;
 <% end %>
 }
 
 <% for @property in @entity.properties %>
-@property (readonly) <%= @property.exposed_type %><%= @property.exposed_name %>
+@property (readonly) <%= @property.exposed_type %> <%= @property.exposed_name %>;
 
 <% end %>
 

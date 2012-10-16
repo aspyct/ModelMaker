@@ -25,8 +25,10 @@
     self = [super init];
     
     if (self) {
-        _tags = [[NSMutableSet alloc] init];        
-        _comments = [[NSMutableArray alloc] init];        
+        _tags = [[NSMutableSet alloc] init];
+        
+        _comments = [[NSMutableArray alloc] init];
+        
     }
     
     return self;

@@ -93,12 +93,24 @@ module ModelMaker
             @protocols = []
         end
         
-        def name
+        def short_name
+            @name
+        end
+        
+        def class_name
             if @project
                 "#{@project.class_prefix}#{@name}"
             else
                 @name
             end
+        end
+        
+        alias :name :class_name
+        
+        def instance_name
+            name = @name.clone
+            name[0] = name[0].downcase
+            name
         end
         
         def add_property(property)
@@ -154,6 +166,16 @@ module ModelMaker
         def init_line
             nil
         end
+        
+        def setter_signature
+            name = exposed_name.to_s
+            name[0] = name[0].upcase
+            "- (void)set#{name}:(#{exposed_type})#{exposed_name}"
+        end
+        
+        def assignation_value
+            exposed_name
+        end
     end
     
     class StringProperty < Property
@@ -188,7 +210,11 @@ module ModelMaker
         end
         
         def init_line
-            "#{internal_name} = [[NSMutableSet alloc] init];"
+            "#{internal_name} = [[NSMutableSet alloc] init]"
+        end
+        
+        def assignation_value
+            "[[NSMutableSet alloc] initWithSet:#{exposed_name}]"
         end
     end
     
@@ -206,7 +232,11 @@ module ModelMaker
         end
         
         def init_line
-            "#{internal_name} = [[NSMutableArray alloc] init];";
+            "#{internal_name} = [[NSMutableArray alloc] init]";
+        end
+        
+        def assignation_value
+            "[[NSMutableArray alloc] initWithArray:#{exposed_name}]"
         end
     end
     
@@ -259,7 +289,9 @@ module ModelMaker
             def renderers
                 [
                     HeaderRenderer,
-                    ImplementationRenderer
+                    ImplementationRenderer,
+                    BuilderHeaderRenderer,
+                    BuilderImplementationRenderer
                 ]
             end
         end
@@ -323,7 +355,17 @@ module ModelMaker
             end
             
             def generated_file(template_vars)
-                "#{template_vars.entity.name}Builer.h"
+                "#{template_vars.entity.name}Builder.h"
+            end
+        end
+        
+        class BuilderImplementationRenderer < BaseRenderer
+            def template_file
+                'builder_implementation.erb'
+            end
+            
+            def generated_file(template_vars)
+                "#{template_vars.entity.name}Builder.m"
             end
         end
         
