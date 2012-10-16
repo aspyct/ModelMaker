@@ -11,6 +11,7 @@
 #import "MPBlogPost.h"
 
 @implementation MPBlogPost
+
 @synthesize blogPostId = _blogPostId;
 @synthesize title = _title;
 @synthesize body = _body;

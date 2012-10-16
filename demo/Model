@@ -15,3 +15,9 @@ object 'BlogPost' do
     array   :comments
     url     :online
 end
+
+object 'Comment' do
+    int     :commentId
+    string  :body
+    string  :author
+end
