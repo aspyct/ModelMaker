@@ -72,8 +72,8 @@ module ModelMaker
             add_property(UrlProperty.new(propname))
         end
         
-        def array(propname)
-            add_property(ArrayProperty.new(propname))
+        def array(*args)
+            add_property(ArrayProperty.new(*args))
         end
         
         def date(propname)
@@ -242,6 +242,12 @@ module ModelMaker
     end
     
     class ArrayProperty < Property
+        def initialize(name, type=nil)
+            super(name)
+            
+            @type = type
+        end
+        
         def internal_type
             'NSMutableArray *'
         end
