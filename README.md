@@ -24,7 +24,7 @@ copyright '2012 MyCompany'
 object 'BlogPost' do
     inherits 'NSObject' # Put any superclass here.
     conforms_to 'AnyProtocol' # You may have several of these
-    
+
     # Currently only these 6 types are supported
     int     :blogPostId
     string  :title
@@ -33,6 +33,12 @@ object 'BlogPost' do
     set     :tags
     array   :comments
     url     :online
+end
+
+object 'Comment' do
+    int     :commentId
+    string  :body
+    string  :author
 end
 
 # As you may have noticed, this is ruby
