@@ -80,6 +80,10 @@ module ModelMaker
             add_property(DateProperty.new(propname))
         end
         
+        def id(propname, cls)
+            add_property(IdProperty.new(propname, cls))
+        end
+        
         def add_property(property)
             @entity.add_property(property)
         end
@@ -99,6 +103,14 @@ module ModelMaker
         
         def short_name
             @name
+        end
+        
+        def project=(project)
+            @project = project
+            
+            for property in properties do
+                property.project = project
+            end
         end
         
         def class_name
@@ -138,6 +150,7 @@ module ModelMaker
     
     class Property
         attr_reader :name
+        attr_accessor :project
         
         def initialize(name)
             @name = name
@@ -247,6 +260,23 @@ module ModelMaker
         
         def assignation_value
             "[[NSMutableArray alloc] initWithArray:#{exposed_name}]"
+        end
+    end
+    
+    class IdProperty < Property
+        def initialize(name, cls)
+            super(name)
+            
+            @cls = cls
+        end
+        
+        def type
+            # If we're linked to a project and class has no prefix
+            if project and not @cls =~ /^[A-Z]{3}/
+                "#{project.class_prefix}#{@cls}"
+            else
+                "#{@cls} *"
+            end
         end
     end
     

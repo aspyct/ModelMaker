@@ -19,6 +19,8 @@
     NSMutableSet * _tags;
     NSMutableArray * _comments;
     NSURL * _online;
+    MPAuthor _author;
+    NSObject * _test;
 }
 
 @property (readonly) NSInteger blogPostId;
@@ -28,5 +30,7 @@
 @property (readonly) NSSet * tags;
 @property (readonly) NSArray * comments;
 @property (readonly) NSURL * online;
+@property (readonly) MPAuthor author;
+@property (readonly) NSObject * test;
 
 @end
