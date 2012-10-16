@@ -26,9 +26,7 @@
     
     if (self) {
         _tags = [[NSMutableSet alloc] init];
-        
         _comments = [[NSMutableArray alloc] init];
-        
     }
     
     return self;

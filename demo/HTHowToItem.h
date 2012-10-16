@@ -23,20 +23,12 @@
 }
 
 @property (readonly) NSInteger id;
-
 @property (readonly) NSString * title;
-
 @property (readonly) NSString * author;
-
 @property (readonly) NSURL * image;
-
 @property (readonly) NSString * description;
-
 @property (readonly) NSInteger score;
-
 @property (readonly) NSSet * tags;
-
 @property (readonly) NSArray * comments;
-
 
 @end

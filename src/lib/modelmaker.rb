@@ -320,7 +320,7 @@ module ModelMaker
             def renderer
                 if not @renderer
                     mydir = File.dirname(__FILE__)
-                    template_path = File.join(mydir, template_file)
+                    template_path = File.join(mydir, '../templates', template_file)
                     template = File.new(template_path).read()
                     @renderer = ERB.new(template, 0, '>')
                 end
@@ -374,5 +374,3 @@ module ModelMaker
         end
     end
 end
-
-ModelMaker::DefaultRunner.new().run()
