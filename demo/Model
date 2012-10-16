@@ -15,4 +15,5 @@ object "HowToItem" do
     int     :score
     set     :tags
     array   :comments
+    date    :publication
 end

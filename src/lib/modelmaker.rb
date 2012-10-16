@@ -76,6 +76,10 @@ module ModelMaker
             add_property(ArrayProperty.new(propname))
         end
         
+        def date(propname)
+            add_property(DateProperty.new(propname))
+        end
+        
         def add_property(property)
             @entity.add_property(property)
         end
@@ -193,6 +197,12 @@ module ModelMaker
     class UrlProperty < Property
         def type
             'NSURL *'
+        end
+    end
+    
+    class DateProperty < Property
+        def type
+            'NSDate *'
         end
     end
     

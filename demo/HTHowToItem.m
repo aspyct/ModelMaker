@@ -19,6 +19,7 @@
 @synthesize score = _score;
 @synthesize tags = _tags;
 @synthesize comments = _comments;
+@synthesize publication = _publication;
 
 - (id)init
 {

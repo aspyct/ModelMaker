@@ -25,5 +25,6 @@
 - (void)setScore:(NSInteger)score;
 - (void)setTags:(NSSet *)tags;
 - (void)setComments:(NSArray *)comments;
+- (void)setPublication:(NSDate *)publication;
 
 @end

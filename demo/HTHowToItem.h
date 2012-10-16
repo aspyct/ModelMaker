@@ -20,6 +20,7 @@
     NSInteger _score;
     NSMutableSet * _tags;
     NSMutableArray * _comments;
+    NSDate * _publication;
 }
 
 @property (readonly) NSInteger id;
@@ -30,5 +31,6 @@
 @property (readonly) NSInteger score;
 @property (readonly) NSSet * tags;
 @property (readonly) NSArray * comments;
+@property (readonly) NSDate * publication;
 
 @end

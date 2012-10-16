@@ -56,4 +56,8 @@
     _howToItem->_comments = [[NSMutableArray alloc] initWithArray:comments];
 }
 
+- (void)setPublication:(NSDate *)publication {
+    _howToItem->_publication = publication;
+}
+
 @end
