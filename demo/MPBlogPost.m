@@ -20,7 +20,6 @@
 @synthesize comments = _comments;
 @synthesize online = _online;
 @synthesize author = _author;
-@synthesize test = _test;
 
 - (id)init
 {

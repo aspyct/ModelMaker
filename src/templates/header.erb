@@ -20,8 +20,15 @@
 <% end %>
 }
 
-<% for @property in @entity.properties %>
-@property (readonly) <%= @property.exposed_type %> <%= @property.exposed_name %>;
+<% for property in @entity.properties %>
+<% if property.comment_line %>
+
+/**
+ * <%= property.comment_line %>
+
+ */
+<% end %>
+@property (readonly) <%= property.exposed_type %> <%= property.exposed_name %>;
 <% end %>
 
 @end
