@@ -121,6 +121,14 @@ module ModelMaker
             end
         end
         
+        def mutable_class
+            if @project
+                "#{@project.class_prefix}Mutable#{@name}"
+            else
+                "Mutable#{@name}"
+            end
+        end
+        
         alias :name :class_name
         
         def instance_name
@@ -182,12 +190,6 @@ module ModelMaker
         
         def init_line
             nil
-        end
-        
-        def setter_signature
-            name = exposed_name.to_s
-            name[0] = name[0].upcase
-            "- (void)set#{name}:(#{exposed_type})#{exposed_name}"
         end
         
         def assignation_value
@@ -341,6 +343,7 @@ module ModelMaker
                         vars.entity = entity
                         
                         filename = renderer.generated_file(vars)
+                        puts "Generating #{filename}"
                         fullpath = File.join(target_directory, filename)
                         fhandle = File.new(fullpath, 'w')
                         fhandle.write(renderer.result(vars))
@@ -352,8 +355,8 @@ module ModelMaker
                 [
                     HeaderRenderer,
                     ImplementationRenderer,
-                    BuilderHeaderRenderer,
-                    BuilderImplementationRenderer
+                    MutableHeaderRenderer,
+                    MutableImplementationRenderer
                 ]
             end
         end
@@ -397,7 +400,7 @@ module ModelMaker
             end
             
             def generated_file(template_vars)
-                "#{template_vars.entity.name}.h"
+                "#{template_vars.entity.class_name}.h"
             end
         end
         
@@ -407,27 +410,27 @@ module ModelMaker
             end
             
             def generated_file(template_vars)
-                "#{template_vars.entity.name}.m"
+                "#{template_vars.entity.class_name}.m"
             end
         end
         
-        class BuilderHeaderRenderer < BaseRenderer
+        class MutableHeaderRenderer < BaseRenderer
             def template_file
-                'builder_header.erb'
+                'mutable_header.erb'
             end
             
             def generated_file(template_vars)
-                "#{template_vars.entity.name}Builder.h"
+                "#{template_vars.entity.mutable_class}.h"
             end
         end
         
-        class BuilderImplementationRenderer < BaseRenderer
+        class MutableImplementationRenderer < BaseRenderer
             def template_file
-                'builder_implementation.erb'
+                'mutable_implementation.erb'
             end
             
             def generated_file(template_vars)
-                "#{template_vars.entity.name}Builder.m"
+                "#{template_vars.entity.mutable_class}.m"
             end
         end
         
