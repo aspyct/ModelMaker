@@ -40,5 +40,9 @@
     _online = online;
 }
 
+- (void)setAuthor:(MPAuthor *)author {
+    _author = author;
+}
+
 
 @end

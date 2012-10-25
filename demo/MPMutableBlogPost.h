@@ -20,5 +20,6 @@
 @property (readwrite) NSSet * tags;
 @property (readwrite) NSArray * comments;
 @property (readwrite) NSURL * online;
+@property (readwrite) MPAuthor * author;
 
 @end
