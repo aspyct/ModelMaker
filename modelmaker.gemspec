@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
     s.name = 'modelmaker'
-    s.version = '0.1.2'
-    s.date = '2012-10-16'
+    s.version = '0.2.0'
+    s.date = '2012-10-25'
     s.summary = 'Objective-C model class generator'
     s.description = 'ModelMaker generates your model classes based on a simple ruby ' \
                     'definition. '
