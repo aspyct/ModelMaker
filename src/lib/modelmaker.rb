@@ -14,6 +14,16 @@ module ModelMaker
             entity.project = self
             @entities << entity
         end
+        
+        def get_entity(name)
+            catch (:entity) {
+                for entity in @entities do
+                    if entity.short_name == name
+                        throw :entity, entity
+                    end
+                end
+            }
+        end
     end
     
     class ProjectBuilder
@@ -82,10 +92,15 @@ module ModelMaker
         
         def id(propname, cls)
             add_property(IdProperty.new(propname, cls))
+            add_dependency(cls)
         end
         
         def add_property(property)
             @entity.add_property(property)
+        end
+        
+        def add_dependency(cls)
+            @entity.add_dependency(cls)
         end
     end
     
@@ -99,6 +114,7 @@ module ModelMaker
             @superclass = 'NSObject'
             @properties = {}
             @protocols = []
+            @deps = []
         end
         
         def short_name
@@ -139,6 +155,23 @@ module ModelMaker
         
         def add_property(property)
             @properties[property.name] = property
+        end
+        
+        def add_dependency(cls)
+            @deps << cls
+        end
+        
+        def dependencies
+            if not @project
+                raise "Need a project to list dependencies"
+            end
+            
+            deps = []
+            for dependency in @deps do
+                deps << @project.get_entity(dependency)
+            end
+            
+            deps
         end
         
         def properties

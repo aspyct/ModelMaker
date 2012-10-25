@@ -12,6 +12,9 @@
 //
 
 #import <Foundation/Foundation.h>
+<% for dependency in entity.dependencies %>
+#import "<%= dependency.class_name %>.h"
+<% end %>
 
 @interface <%= @entity.name %> : <%= @entity.superclass %> <%= '<' + @entity.protocols.join(', ') + '> ' if not @entity.protocols.empty? %>{
 @protected

@@ -5,7 +5,6 @@ copyright '2012 MyCompany'
 object 'BlogPost' do
     inherits 'NSObject' # Put any superclass here.
 
-    # Currently only these 6 types are supported
     int     :blogPostId
     string  :title
     string  :body
@@ -13,7 +12,7 @@ object 'BlogPost' do
     set     :tags
     array   :comments, 'Comment'
     url     :online
-    #id      :author, 'Author'
+    id      :author, 'Author'
 end
 
 object 'Author' do

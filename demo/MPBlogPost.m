@@ -19,6 +19,7 @@
 @synthesize tags = _tags;
 @synthesize comments = _comments;
 @synthesize online = _online;
+@synthesize author = _author;
 
 - (id)init
 {

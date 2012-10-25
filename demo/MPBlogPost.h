@@ -9,6 +9,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MPAuthor.h"
 
 @interface MPBlogPost : NSObject {
 @protected
@@ -19,6 +20,7 @@
     NSMutableSet * _tags;
     NSMutableArray * _comments;
     NSURL * _online;
+    MPAuthor * _author;
 }
 
 @property (readonly) NSInteger blogPostId;
@@ -32,5 +34,6 @@
  */
 @property (readonly) NSArray * comments;
 @property (readonly) NSURL * online;
+@property (readonly) MPAuthor * author;
 
 @end
