@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 
 @interface MPComment : NSObject {
-@package
+@protected
     NSInteger _commentId;
     NSString * _body;
     NSString * _author;

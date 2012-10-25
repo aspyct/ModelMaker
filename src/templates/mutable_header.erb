@@ -1,5 +1,5 @@
 //
-// <%= entity.name %>Builder.h
+// <%= entity.mutable_class %>.h
 // <%= project.name %>
 
 <% if project.copyright %>
@@ -12,16 +12,13 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "<%= entity.name %>.h"
+#import "<%= entity.class_name %>.h"
 
-@interface <%= entity.name %>Builder : NSObject
+@interface <%= entity.mutable_class %> : <%= entity.class_name %>
 
-@property (readonly) <%= entity.name %> *<%= entity.instance_name %>;
-
-- (id)init;
 
 <% for property in entity.properties %>
-<%= property.setter_signature %>;
+@property (readwrite) <%= property.exposed_type %> <%= property.exposed_name %>;
 <% end %>
 
 @end

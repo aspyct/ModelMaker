@@ -121,6 +121,14 @@ module ModelMaker
             end
         end
         
+        def mutable_class
+            if @project
+                "#{@project.class_prefix}Mutable#{@name}"
+            else
+                "Mutable#{@name}"
+            end
+        end
+        
         alias :name :class_name
         
         def instance_name
@@ -192,6 +200,10 @@ module ModelMaker
         
         def assignation_value
             exposed_name
+        end
+        
+        def assignation_line
+            "#{internal_name} = #{assignation_value}"
         end
         
         def comment_line
@@ -352,8 +364,8 @@ module ModelMaker
                 [
                     HeaderRenderer,
                     ImplementationRenderer,
-                    BuilderHeaderRenderer,
-                    BuilderImplementationRenderer
+                    MutableHeaderRenderer,
+                    MutableImplementationRenderer
                 ]
             end
         end
@@ -411,23 +423,23 @@ module ModelMaker
             end
         end
         
-        class BuilderHeaderRenderer < BaseRenderer
+        class MutableHeaderRenderer < BaseRenderer
             def template_file
-                'builder_header.erb'
+                'mutable_header.erb'
             end
             
             def generated_file(template_vars)
-                "#{template_vars.entity.name}Builder.h"
+                "#{template_vars.entity.mutable_class}.h"
             end
         end
         
-        class BuilderImplementationRenderer < BaseRenderer
+        class MutableImplementationRenderer < BaseRenderer
             def template_file
-                'builder_implementation.erb'
+                'mutable_implementation.erb'
             end
             
             def generated_file(template_vars)
-                "#{template_vars.entity.name}Builder.m"
+                "#{template_vars.entity.mutable_class}.m"
             end
         end
         

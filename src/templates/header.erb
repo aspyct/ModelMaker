@@ -14,7 +14,7 @@
 #import <Foundation/Foundation.h>
 
 @interface <%= @entity.name %> : <%= @entity.superclass %> <%= '<' + @entity.protocols.join(', ') + '> ' if not @entity.protocols.empty? %>{
-@package
+@protected
 <% for @property in @entity.properties %>
     <%= @property.internal_type %> <%= @property.internal_name %>;
 <% end %>
