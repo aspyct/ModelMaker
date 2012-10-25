@@ -192,8 +192,18 @@ module ModelMaker
             nil
         end
         
+        def setter_signature
+            name = exposed_name.to_s
+            name[0] = name[0].upcase
+            "- (void)set#{name}:(#{exposed_type})#{exposed_name}"
+        end
+        
         def assignation_value
             exposed_name
+        end
+        
+        def assignation_line
+            "#{internal_name} = #{assignation_value}"
         end
         
         def comment_line
@@ -343,7 +353,6 @@ module ModelMaker
                         vars.entity = entity
                         
                         filename = renderer.generated_file(vars)
-                        puts "Generating #{filename}"
                         fullpath = File.join(target_directory, filename)
                         fhandle = File.new(fullpath, 'w')
                         fhandle.write(renderer.result(vars))
@@ -400,7 +409,7 @@ module ModelMaker
             end
             
             def generated_file(template_vars)
-                "#{template_vars.entity.class_name}.h"
+                "#{template_vars.entity.name}.h"
             end
         end
         
@@ -410,7 +419,7 @@ module ModelMaker
             end
             
             def generated_file(template_vars)
-                "#{template_vars.entity.class_name}.m"
+                "#{template_vars.entity.name}.m"
             end
         end
         

@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 
 @interface MPAuthor : NSObject {
-@package
+@protected
     NSInteger _authorId;
     NSString * _name;
 }

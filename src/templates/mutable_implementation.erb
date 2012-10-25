@@ -16,8 +16,11 @@
 @implementation <%= entity.mutable_class %>
 
 
-<% for @property in @entity.properties %>
-@synthesize <%= @property.exposed_name %> = <%= @property.internal_name %>;
+<% for property in entity.properties %>
+<%= property.setter_signature %> {
+    <%= property.assignation_line %>;
+}
+
 <% end %>
 
 @end

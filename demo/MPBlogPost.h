@@ -10,8 +10,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MPBlogPost : NSObject <AnyProtocol> {
-@package
+@interface MPBlogPost : NSObject {
+@protected
     NSInteger _blogPostId;
     NSString * _title;
     NSString * _body;
@@ -19,7 +19,6 @@
     NSMutableSet * _tags;
     NSMutableArray * _comments;
     NSURL * _online;
-    MPAuthor * _author;
 }
 
 @property (readonly) NSInteger blogPostId;
@@ -33,6 +32,5 @@
  */
 @property (readonly) NSArray * comments;
 @property (readonly) NSURL * online;
-@property (readonly) MPAuthor * author;
 
 @end

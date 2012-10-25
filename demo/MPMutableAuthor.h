@@ -1,5 +1,5 @@
 //
-// MPAuthorBuilder.h
+// MPMutableAuthor.h
 // MyProject
 //
 // Copyright (c) 2012 MyCompany. All rights reserved.
@@ -11,13 +11,9 @@
 #import <Foundation/Foundation.h>
 #import "MPAuthor.h"
 
-@interface MPAuthorBuilder : NSObject
+@interface MPMutableAuthor : MPAuthor
 
-@property (readonly) MPAuthor *author;
-
-- (id)init;
-
-- (void)setAuthorId:(NSInteger)authorId;
-- (void)setName:(NSString *)name;
+@property (readwrite) NSInteger authorId;
+@property (readwrite) NSString * name;
 
 @end
