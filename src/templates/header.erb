@@ -12,7 +12,6 @@
 //
 
 #import <Foundation/Foundation.h>
-
 <% for dependency in entity.dependencies %>
 #import "<%= dependency.class_name %>.h"
 <% end %>
